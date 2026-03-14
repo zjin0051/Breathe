@@ -50,9 +50,7 @@ const sortedStates = Object.keys(groupedStations).sort();
 
 // Sort stations within each state
 sortedStates.forEach((state) => {
-  groupedStations[state].sort((a, b) =>
-    a.name.localeCompare(b.name),
-  );
+  groupedStations[state].sort((a, b) => a.name.localeCompare(b.name));
 });
 
 // Air quality data for Malaysian cities
@@ -266,8 +264,7 @@ const seasonalAdvice: {
   },
   "Inter-monsoon": {
     title: "Transition Period (Mar-Apr, Oct)",
-    advice:
-      "Moderate air quality expected. Weather can be unpredictable.",
+    advice: "Moderate air quality expected. Weather can be unpredictable.",
     precautions: [
       "Check daily forecasts",
       "Plan outdoor activities for mornings",
@@ -277,18 +274,17 @@ const seasonalAdvice: {
 };
 
 export default function Dashboard() {
-  const [currentLocation, setCurrentLocation] =
-    useState("Kuala Lumpur");
+  const [currentLocation, setCurrentLocation] = useState("Kuala Lumpur");
   const [showAlert, setShowAlert] = useState(true);
-  const [comparisonCities, setComparisonCities] = useState<
-    string[]
-  >(["Kuala Lumpur", "Penang", "Kuching"]);
-  const [selectedMonth, setSelectedMonth] = useState<
-    string | null
-  >(null);
-  const [apiStatus, setApiStatus] = useState<
-    "loading" | "success" | "error"
-  >("loading");
+  const [comparisonCities, setComparisonCities] = useState<string[]>([
+    "Kuala Lumpur",
+    "Penang",
+    "Kuching",
+  ]);
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
+  const [apiStatus, setApiStatus] = useState<"loading" | "success" | "error">(
+    "loading",
+  );
   const [currentData, setCurrentData] = useState<{
     aqi: number | string;
     level: string;
@@ -322,22 +318,18 @@ export default function Dashboard() {
       pollutantValues["PM2.5"] = pollutants.pm25.v;
     if (pollutants.pm10?.v !== undefined)
       pollutantValues["PM10"] = pollutants.pm10.v;
-    if (pollutants.o3?.v !== undefined)
-      pollutantValues["O3"] = pollutants.o3.v;
+    if (pollutants.o3?.v !== undefined) pollutantValues["O3"] = pollutants.o3.v;
     if (pollutants.no2?.v !== undefined)
       pollutantValues["NO2"] = pollutants.no2.v;
     if (pollutants.so2?.v !== undefined)
       pollutantValues["SO2"] = pollutants.so2.v;
-    if (pollutants.co?.v !== undefined)
-      pollutantValues["CO"] = pollutants.co.v;
+    if (pollutants.co?.v !== undefined) pollutantValues["CO"] = pollutants.co.v;
 
-    if (Object.keys(pollutantValues).length === 0)
-      return "PM2.5";
+    if (Object.keys(pollutantValues).length === 0) return "PM2.5";
 
     // Find the pollutant with highest value
-    const mainPollutant = Object.keys(pollutantValues).reduce(
-      (a, b) =>
-        pollutantValues[a] > pollutantValues[b] ? a : b,
+    const mainPollutant = Object.keys(pollutantValues).reduce((a, b) =>
+      pollutantValues[a] > pollutantValues[b] ? a : b,
     );
 
     return mainPollutant;
@@ -369,8 +361,7 @@ export default function Dashboard() {
       console.log("Full API Response:", data);
 
       if (data.status === "ok" && data.data) {
-        const apiAqi =
-          data.data.aqi !== undefined ? data.data.aqi : "0000";
+        const apiAqi = data.data.aqi !== undefined ? data.data.aqi : "0000";
         const apiCity = data.data.city?.name || "0000";
         const apiTime = data.data.time?.iso || "0000";
         const mainPollutant = getMainPollutant(data.data);
@@ -383,10 +374,7 @@ export default function Dashboard() {
         // Update state with API data
         setCurrentData({
           aqi: apiAqi,
-          level:
-            typeof apiAqi === "number"
-              ? getAQILevel(apiAqi)
-              : "",
+          level: typeof apiAqi === "number" ? getAQILevel(apiAqi) : "",
           pollutant: mainPollutant,
           cityName: apiCity,
           lastUpdated: apiTime,
@@ -435,8 +423,7 @@ export default function Dashboard() {
       console.log("Full API Response:", data);
 
       if (data.status === "ok" && data.data) {
-        const apiAqi =
-          data.data.aqi !== undefined ? data.data.aqi : "0000";
+        const apiAqi = data.data.aqi !== undefined ? data.data.aqi : "0000";
         const apiCity = data.data.city?.name || "0000";
         const apiTime = data.data.time?.iso || "0000";
         const apiUid = data.data.idx; // Station UID from API
@@ -454,27 +441,18 @@ export default function Dashboard() {
         );
 
         if (matchingStation) {
-          console.log(
-            "Matching station found:",
-            matchingStation.name,
-          );
+          console.log("Matching station found:", matchingStation.name);
           // Set dropdown to the station returned by API (based on UID)
           setCurrentLocation(matchingStation.name);
         } else {
-          console.log(
-            "No matching station found for UID:",
-            apiUid,
-          );
+          console.log("No matching station found for UID:", apiUid);
           // Keep the selected location if no match found
         }
 
         // Update state with API data
         setCurrentData({
           aqi: apiAqi,
-          level:
-            typeof apiAqi === "number"
-              ? getAQILevel(apiAqi)
-              : "",
+          level: typeof apiAqi === "number" ? getAQILevel(apiAqi) : "",
           pollutant: mainPollutant,
           cityName: apiCity,
           lastUpdated: apiTime,
@@ -507,10 +485,7 @@ export default function Dashboard() {
         console.log("Full API Response:", data);
 
         if (data.status === "ok" && data.data) {
-          const apiAqi =
-            data.data.aqi !== undefined
-              ? data.data.aqi
-              : "0000";
+          const apiAqi = data.data.aqi !== undefined ? data.data.aqi : "0000";
           const apiCity = data.data.city?.name || "0000";
           const apiTime = data.data.time?.iso || "0000";
           const apiUid = data.data.idx; // Station UID from API
@@ -528,25 +503,16 @@ export default function Dashboard() {
           );
 
           if (matchingStation) {
-            console.log(
-              "Matching station found:",
-              matchingStation.name,
-            );
+            console.log("Matching station found:", matchingStation.name);
             setCurrentLocation(matchingStation.name);
           } else {
-            console.log(
-              "No matching station found for UID:",
-              apiUid,
-            );
+            console.log("No matching station found for UID:", apiUid);
           }
 
           // Update state with API data
           setCurrentData({
             aqi: apiAqi,
-            level:
-              typeof apiAqi === "number"
-                ? getAQILevel(apiAqi)
-                : "",
+            level: typeof apiAqi === "number" ? getAQILevel(apiAqi) : "",
             pollutant: mainPollutant,
             cityName: apiCity,
             lastUpdated: apiTime,
@@ -554,17 +520,11 @@ export default function Dashboard() {
 
           setApiStatus("success");
         } else {
-          console.log(
-            "API returned non-ok status:",
-            data.status,
-          );
+          console.log("API returned non-ok status:", data.status);
           setApiStatus("error");
         }
       } catch (error) {
-        console.error(
-          "Failed to fetch initial air quality data",
-          error,
-        );
+        console.error("Failed to fetch initial air quality data", error);
         setApiStatus("error");
       }
     };
@@ -586,9 +546,7 @@ export default function Dashboard() {
 
     const latDiff = Math.abs(current.lat - target.lat);
     const lngDiff = Math.abs(current.lng - target.lng);
-    return Math.round(
-      Math.sqrt(latDiff * latDiff + lngDiff * lngDiff) * 111,
-    ); // rough km conversion
+    return Math.round(Math.sqrt(latDiff * latDiff + lngDiff * lngDiff) * 111); // rough km conversion
   };
 
   // Get safe zones (areas with better air quality than current location)
@@ -656,8 +614,7 @@ export default function Dashboard() {
     switch (level) {
       case "Low":
         return {
-          message:
-            "Air quality is good today. Perfect for outdoor activities!",
+          message: "Air quality is good today. Perfect for outdoor activities!",
           maskAdvice: "No mask needed",
           maxOutdoorDuration: "No restrictions",
           activities: [
@@ -673,8 +630,7 @@ export default function Dashboard() {
         return {
           message:
             "Air quality is moderate today. Limit prolonged outdoor activity.",
-          maskAdvice:
-            "Cloth mask recommended for sensitive groups",
+          maskAdvice: "Cloth mask recommended for sensitive groups",
           maxOutdoorDuration: "1-2 hours recommended",
           activities: [
             "Light outdoor activities",
@@ -686,8 +642,7 @@ export default function Dashboard() {
         };
       case "High":
         return {
-          message:
-            "Air quality is currently unhealthy for outdoor activity.",
+          message: "Air quality is currently unhealthy for outdoor activity.",
           maskAdvice: "N95 mask required if going outside",
           maxOutdoorDuration: "15-30 minutes maximum",
           activities: [
@@ -705,8 +660,7 @@ export default function Dashboard() {
           maskAdvice: "As a precaution, wear a mask",
           maxOutdoorDuration: "Check official sources",
           activities: ["Check local air quality reports"],
-          familyAdvice:
-            "Stay informed about air quality conditions.",
+          familyAdvice: "Stay informed about air quality conditions.",
         };
     }
   };
@@ -728,15 +682,12 @@ export default function Dashboard() {
   // Get tomorrow's date
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowDateString = tomorrow.toLocaleDateString(
-    "en-MY",
-    {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    },
-  );
+  const tomorrowDateString = tomorrow.toLocaleDateString("en-MY", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   // Helper function to create readable text for speech
   const getCurrentAQISpeechText = (): string => {
@@ -777,8 +728,8 @@ export default function Dashboard() {
             </div>
           </div>
           <p className="text-xl md:text-2xl text-gray-700 leading-relaxed mt-4">
-            Helping you plan safer outdoor activities with
-            real-time air quality insights.
+            Helping you plan safer outdoor activities with real-time air quality
+            insights.
           </p>
 
           {/* Speech Controls in Header */}
@@ -824,8 +775,7 @@ export default function Dashboard() {
                   ⚠️ Air Quality Alert
                 </h2>
                 <p className="text-2xl md:text-3xl font-semibold mb-4">
-                  Air quality is currently UNHEALTHY for outdoor
-                  activity
+                  Air quality is currently UNHEALTHY for outdoor activity
                 </p>
                 <div className="bg-red-700 rounded-2xl p-6 mb-4">
                   <div className="grid md:grid-cols-2 gap-6 text-xl">
@@ -835,8 +785,7 @@ export default function Dashboard() {
                         Current AQI Level:
                       </p>
                       <p className="text-2xl">
-                        {currentData.aqi} - {currentData.level}{" "}
-                        Risk
+                        {currentData.aqi} - {currentData.level} Risk
                       </p>
                     </div>
                     <div>
@@ -851,18 +800,14 @@ export default function Dashboard() {
                         <Shield className="w-6 h-6" />
                         Maximum Outdoor Time:
                       </p>
-                      <p className="text-2xl">
-                        {healthRec.maxOutdoorDuration}
-                      </p>
+                      <p className="text-2xl">{healthRec.maxOutdoorDuration}</p>
                     </div>
                     <div>
                       <p className="font-bold mb-2 flex items-center gap-2">
                         <Bell className="w-6 h-6" />
                         Main Pollutant:
                       </p>
-                      <p className="text-2xl">
-                        {currentData.pollutant}
-                      </p>
+                      <p className="text-2xl">{currentData.pollutant}</p>
                     </div>
                   </div>
                 </div>
@@ -935,9 +880,7 @@ export default function Dashboard() {
                 <div
                   className="inline-block text-white px-10 py-5 rounded-full text-3xl font-bold shadow-lg mb-4"
                   style={{
-                    backgroundColor: getColorForLevel(
-                      currentData.level,
-                    ),
+                    backgroundColor: getColorForLevel(currentData.level),
                   }}
                 >
                   {currentData.level} Risk
@@ -946,9 +889,7 @@ export default function Dashboard() {
                   <Wind className="w-8 h-8 text-gray-700" />
                   <p className="text-2xl text-gray-700">
                     Main Pollutant:{" "}
-                    <span className="font-bold">
-                      {currentData.pollutant}
-                    </span>
+                    <span className="font-bold">{currentData.pollutant}</span>
                   </p>
                 </div>
               </div>
@@ -993,17 +934,15 @@ export default function Dashboard() {
                   ✅ Recommended Activities:
                 </h3>
                 <ul className="grid md:grid-cols-2 gap-3">
-                  {healthRec.activities.map(
-                    (activity, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center gap-3 text-xl text-gray-700 bg-gray-50 p-4 rounded-xl"
-                      >
-                        <span className="text-2xl">•</span>
-                        {activity}
-                      </li>
-                    ),
-                  )}
+                  {healthRec.activities.map((activity, index) => (
+                    <li
+                      key={index}
+                      className="flex items-center gap-3 text-xl text-gray-700 bg-gray-50 p-4 rounded-xl"
+                    >
+                      <span className="text-2xl">•</span>
+                      {activity}
+                    </li>
+                  ))}
                 </ul>
               </div>
 
@@ -1029,9 +968,7 @@ export default function Dashboard() {
               </h3>
               <div className="space-y-4">
                 <div className="bg-blue-50 rounded-xl p-6 border-2 border-blue-200">
-                  <p className="text-lg text-blue-700 mb-1">
-                    Location
-                  </p>
+                  <p className="text-lg text-blue-700 mb-1">Location</p>
                   <p className="text-2xl font-bold text-blue-900">
                     {currentLocation}
                   </p>
@@ -1045,17 +982,13 @@ export default function Dashboard() {
                   </p>
                 </div>
                 <div className="bg-purple-50 rounded-xl p-6 border-2 border-purple-200">
-                  <p className="text-lg text-purple-700 mb-1">
-                    Status
-                  </p>
+                  <p className="text-lg text-purple-700 mb-1">Status</p>
                   <p className="text-2xl font-bold text-purple-900">
                     {currentData.level} Risk
                   </p>
                 </div>
                 <div className="bg-orange-50 rounded-xl p-6 border-2 border-orange-200">
-                  <p className="text-lg text-orange-700 mb-1">
-                    Main Pollutant
-                  </p>
+                  <p className="text-lg text-orange-700 mb-1">Main Pollutant</p>
                   <p className="text-2xl font-bold text-orange-900">
                     {currentData.pollutant}
                   </p>
@@ -1085,6 +1018,17 @@ export default function Dashboard() {
 
         {/* Footer */}
         <footer className="bg-gray-800 text-white rounded-2xl p-8 text-center mt-8">
+          <p className="text-sm text-gray-400 mb-2">
+            Data sourced from{" "}
+            <a
+              href="https://aqicn.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              aqicn.org
+            </a>
+          </p>
           <p className="text-xl mb-2">
             Data updates every hour • Stay safe and breathe easy
           </p>

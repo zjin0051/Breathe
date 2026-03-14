@@ -16,22 +16,22 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const testAPI = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(
-        "https://api.data.gov.my/data-catalogue?id=air_pollution",
-      );
-      const data = await response.json();
-      setApiData(data);
-    } catch (err) {
-      setError("Failed to fetch data from API");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const testAPI = async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const response = await fetch(
+  //       "https://api.data.gov.my/data-catalogue?id=air_pollution",
+  //     );
+  //     const data = await response.json();
+  //     setApiData(data);
+  //   } catch (err) {
+  //     setError("Failed to fetch data from API");
+  //     console.error(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -185,7 +185,7 @@ export default function Home() {
         </div>
 
         {/* API Testing Section */}
-        <div className="mb-12">
+        {/* <div className="mb-12">
           <div className="bg-white rounded-2xl p-8 border-4 border-indigo-200 shadow-lg">
             <h3 className="text-3xl font-bold text-gray-900 mb-4 flex items-center gap-3">
               <TestTube className="w-10 h-10 text-indigo-600" />
@@ -194,9 +194,9 @@ export default function Home() {
             <p className="text-2xl text-gray-600 mb-6">
               Click the button below to test the API connection and see
               real-time air quality data
-            </p>
+            </p> */}
 
-            <button
+        {/* <button
               onClick={testAPI}
               disabled={loading}
               className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white text-2xl font-semibold px-8 py-4 rounded-xl transition-colors flex items-center gap-3"
@@ -212,9 +212,9 @@ export default function Home() {
                   Test API Connection
                 </>
               )}
-            </button>
+            </button> */}
 
-            {error && (
+        {/* {error && (
               <div className="mt-6 p-6 bg-red-50 border-2 border-red-300 rounded-xl">
                 <p className="text-2xl text-red-700 font-semibold">{error}</p>
               </div>
@@ -233,7 +233,7 @@ export default function Home() {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
 
         {/* Help Link */}
         <div className="text-center mb-12">
@@ -251,8 +251,19 @@ export default function Home() {
           <p className="text-2xl text-gray-700 mb-4">
             We provide easy-to-understand air quality information
           </p>
-          <p className="text-xl text-gray-500">
+          <p className="text-xl text-gray-500 mb-3">
             Updated every hour • Data for major cities in Malaysia
+          </p>
+          <p className="text-sm text-gray-400">
+            Data sourced from{" "}
+            <a
+              href="https://aqicn.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              aqicn.org
+            </a>
           </p>
         </footer>
       </div>

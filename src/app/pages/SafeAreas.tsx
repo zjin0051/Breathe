@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { MapPin, ArrowLeft, Navigation, Clock, Home as HomeIcon } from 'lucide-react';
 import malaysiaCities from '../../imports/malaysia-cities-1.json';
+import { SpeechButton } from '../components/SpeechButton';
 
 // Group stations by state and sort
 const groupedStations = malaysiaCities.reduce((acc, station) => {
@@ -334,6 +334,29 @@ export default function SafeAreas() {
     }
   };
   
+  // Helper function to create readable text for speech
+  const getSafeAreasSpeechText = (): string => {
+    let speechText = `Finding safe areas near ${currentLocation}. Your current air quality index is ${currentData.aqi}, which is ${currentData.level} risk level. `;
+    
+    if (safeZones.length > 0) {
+      speechText += `We found ${safeZones.length} location${safeZones.length > 1 ? 's' : ''} with better air quality. `;
+      
+      // Announce top 3 safe zones
+      const topZones = safeZones.slice(0, 3);
+      topZones.forEach((zone, index) => {
+        speechText += `Number ${index + 1}: ${zone.name}, ${zone.distance} kilometers away, with air quality index of ${zone.aqi}, which is ${zone.level} risk level. `;
+      });
+      
+      if (safeZones.length > 3) {
+        speechText += `And ${safeZones.length - 3} more safe areas available.`;
+      }
+    } else {
+      speechText += `No better areas found. Air quality in nearby areas is similar or worse than ${currentLocation}. We recommend staying indoors.`;
+    }
+    
+    return speechText;
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 p-8">
       <div className="max-w-6xl mx-auto">
@@ -354,6 +377,22 @@ export default function SafeAreas() {
               <p className="text-2xl text-gray-700 mt-2">
                 Discover locations with better air quality
               </p>
+            </div>
+          </div>
+          
+          {/* Speech Controls in Header */}
+          <div className="mt-6 space-y-4">
+            {/* Quick Speech Button */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-4 border-2 border-green-200">
+              <p className="text-lg font-semibold text-gray-900 mb-3">🔊 Quick Audio Controls:</p>
+              <div className="flex flex-wrap gap-3">
+                <SpeechButton 
+                  text={getSafeAreasSpeechText()}
+                  label="🗺️ Hear Safe Areas Near You"
+                  variant="secondary"
+                  size="medium"
+                />
+              </div>
             </div>
           </div>
         </header>

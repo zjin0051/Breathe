@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { GitCompare, ArrowLeft, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 import malaysiaCities from '../../imports/malaysia-cities-1.json';
+import { SpeechButton } from '../components/SpeechButton';
 
 // Group stations by state and sort
 const groupedStations = malaysiaCities.reduce((acc, station) => {
@@ -414,6 +414,23 @@ export default function CompareLocations() {
   
   const betterLocation = getBetterLocation();
   
+  // Helper function to create readable text for speech
+  const getComparisonSpeechText = (): string => {
+    let comparisonText = `Comparing air quality between ${location1} and ${location2}. `;
+    
+    comparisonText += `${location1} has an Air Quality Index of ${data1.aqi}, which is ${data1.level} risk level. Main pollutant: ${data1.pollutant}. Temperature: ${data1.temp} degrees Celsius. Humidity: ${data1.humidity} percent. `;
+    
+    comparisonText += `${location2} has an Air Quality Index of ${data2.aqi}, which is ${data2.level} risk level. Main pollutant: ${data2.pollutant}. Temperature: ${data2.temp} degrees Celsius. Humidity: ${data2.humidity} percent. `;
+    
+    if (betterLocation !== 'equal') {
+      comparisonText += `${betterLocation} has better air quality. `;
+    } else {
+      comparisonText += `Both locations have similar air quality. `;
+    }
+    
+    return comparisonText;
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 p-8">
       <div className="max-w-7xl mx-auto">
@@ -434,6 +451,22 @@ export default function CompareLocations() {
               <p className="text-2xl text-gray-700 mt-2">
                 Compare air quality between two Malaysian cities
               </p>
+            </div>
+          </div>
+          
+          {/* Speech Controls in Header */}
+          <div className="mt-6">
+            {/* Quick Speech Button */}
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 border-2 border-purple-200">
+              <p className="text-lg font-semibold text-gray-900 mb-3">🔊 Quick Audio Controls:</p>
+              <div className="flex flex-wrap gap-3">
+                <SpeechButton 
+                  text={getComparisonSpeechText()}
+                  label="⚖️ Hear Location Comparison"
+                  variant="secondary"
+                  size="medium"
+                />
+              </div>
             </div>
           </div>
         </header>

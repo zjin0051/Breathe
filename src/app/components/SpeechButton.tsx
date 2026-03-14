@@ -1,24 +1,32 @@
-import { Volume2, VolumeX, Pause, Play } from 'lucide-react';
-import { useSpeech, SpeechOptions } from '../hooks/useSpeech';
+import { Volume2, VolumeX, Pause, Play } from "lucide-react";
+import { useSpeech, SpeechOptions } from "../hooks/useSpeech";
 
 interface SpeechButtonProps {
   text: string;
   label?: string;
   options?: SpeechOptions;
-  variant?: 'primary' | 'secondary' | 'minimal';
-  size?: 'small' | 'medium' | 'large';
+  variant?: "primary" | "secondary" | "minimal";
+  size?: "small" | "medium" | "large";
   className?: string;
 }
 
-export function SpeechButton({ 
-  text, 
-  label = "Read Aloud", 
+export function SpeechButton({
+  text,
+  label = "Read Aloud",
   options = {},
-  variant = 'primary',
-  size = 'medium',
-  className = ''
+  variant = "primary",
+  size = "medium",
+  className = "",
 }: SpeechButtonProps) {
-  const { speak, pause, resume, stop, isSpeaking, isPaused, isSupported } = useSpeech();
+  const {
+    speak,
+    pause,
+    resume,
+    stop,
+    isSpeaking,
+    isPaused,
+    isSupported,
+  } = useSpeech();
 
   if (!isSupported) {
     return null; // Don't show button if speech is not supported
@@ -43,26 +51,31 @@ export function SpeechButton({
 
   // Size classes
   const sizeClasses = {
-    small: 'text-lg px-4 py-2',
-    medium: 'text-xl px-6 py-3',
-    large: 'text-2xl px-8 py-4'
+    small: "text-lg px-4 py-2",
+    medium: "text-xl px-6 py-3",
+    large: "text-2xl px-8 py-4",
   };
 
   const iconSizes = {
-    small: 'w-5 h-5',
-    medium: 'w-6 h-6',
-    large: 'w-8 h-8'
+    small: "w-5 h-5",
+    medium: "w-6 h-6",
+    large: "w-8 h-8",
   };
 
   // Variant classes
   const variantClasses = {
-    primary: 'bg-indigo-600 hover:bg-indigo-700 text-white border-2 border-indigo-700 shadow-lg',
-    secondary: 'bg-white hover:bg-gray-50 text-indigo-600 border-2 border-indigo-400 shadow-md',
-    minimal: 'bg-transparent hover:bg-indigo-50 text-indigo-600 border-2 border-transparent'
+    primary:
+      "bg-indigo-600 hover:bg-indigo-700 text-white border-2 border-indigo-700 shadow-lg",
+    secondary:
+      "bg-white hover:bg-gray-50 text-indigo-600 border-2 border-indigo-400 shadow-md",
+    minimal:
+      "bg-transparent hover:bg-indigo-50 text-indigo-600 border-2 border-transparent",
   };
 
   return (
-    <div className={`inline-flex items-center gap-2 ${className}`}>
+    <div
+      className={`inline-flex items-center gap-2 ${className}`}
+    >
       <button
         onClick={handleClick}
         className={`
@@ -72,7 +85,13 @@ export function SpeechButton({
           ${sizeClasses[size]}
           ${variantClasses[variant]}
         `}
-        aria-label={isSpeaking ? (isPaused ? 'Resume reading' : 'Pause reading') : label}
+        aria-label={
+          isSpeaking
+            ? isPaused
+              ? "Resume reading"
+              : "Pause reading"
+            : label
+        }
       >
         {isSpeaking ? (
           isPaused ? (
@@ -84,10 +103,10 @@ export function SpeechButton({
           <Volume2 className={iconSizes[size]} />
         )}
         <span>
-          {isSpeaking ? (isPaused ? 'Resume' : 'Pause') : label}
+          {isSpeaking ? (isPaused ? "Resume" : "Pause") : label}
         </span>
       </button>
-      
+
       {isSpeaking && (
         <button
           onClick={handleStop}

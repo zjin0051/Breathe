@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
-import { Calendar, Wind, ArrowLeft, CheckCircle, AlertTriangle, Info, XCircle, Sun, Home as HomeIcon } from 'lucide-react';
+import { CloudRain, ArrowLeft, CheckCircle, AlertTriangle, XCircle, Info, Home as HomeIcon, Sun } from 'lucide-react';
 import malaysiaCities from '../../imports/malaysia-cities-1.json';
+import { SpeechButton } from '../components/SpeechButton';
 
 // Group stations by state and sort
 const groupedStations = malaysiaCities.reduce((acc, station) => {
@@ -371,6 +371,14 @@ export default function Forecast() {
   
   const tomorrowHealthRec = tomorrowData.available ? getHealthRecommendation(tomorrowData.level) : null;
   
+  // Helper function to create readable text for speech
+  const getForecastSpeechText = (): string => {
+    if (!tomorrowData.available || !tomorrowHealthRec) {
+      return `Tomorrow's forecast for ${currentLocation} is not available. Please check again later.`;
+    }
+    return `Tomorrow's forecast for ${currentLocation}. Air Quality Index will be ${tomorrowData.aqi}, which is ${tomorrowData.level} risk level. ${tomorrowHealthRec.message}. Mask recommendation: ${tomorrowHealthRec.maskAdvice}. Safe outdoor time: ${tomorrowHealthRec.maxOutdoorDuration}. Family advice: ${tomorrowHealthRec.familyAdvice}`;
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-sky-50 to-blue-50 p-8">
       <div className="max-w-6xl mx-auto">
@@ -385,12 +393,28 @@ export default function Forecast() {
 
         <header className="bg-white rounded-3xl shadow-2xl p-10 mb-8 border-4 border-cyan-200">
           <div className="flex items-center gap-4 mb-4">
-            <Calendar className="w-16 h-16 text-cyan-600" />
+            <CloudRain className="w-16 h-16 text-cyan-600" />
             <div>
               <h1 className="text-5xl font-bold text-gray-900">Tomorrow's Forecast</h1>
               <p className="text-2xl text-gray-700 mt-2">
                 Plan your outdoor activities for tomorrow
               </p>
+            </div>
+          </div>
+          
+          {/* Speech Controls in Header */}
+          <div className="mt-6">
+            {/* Quick Speech Button */}
+            <div className="bg-gradient-to-r from-cyan-50 to-sky-50 rounded-2xl p-4 border-2 border-cyan-200">
+              <p className="text-lg font-semibold text-gray-900 mb-3">🔊 Quick Audio Controls:</p>
+              <div className="flex flex-wrap gap-3">
+                <SpeechButton 
+                  text={getForecastSpeechText()}
+                  label="📅 Hear Tomorrow's Forecast"
+                  variant="secondary"
+                  size="medium"
+                />
+              </div>
             </div>
           </div>
         </header>

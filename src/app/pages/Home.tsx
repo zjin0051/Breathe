@@ -9,7 +9,7 @@ import {
   HelpCircle,
   TestTube,
 } from "lucide-react";
-import logoImage from "figma:asset/4c954efb773717664ce372521ab63b1533e1b4c5.png";
+import logoImage from "../../assets/logo.png";
 
 export default function Home() {
   const [apiData, setApiData] = useState<any>(null);

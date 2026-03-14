@@ -1,4 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 
 export interface SpeechOptions {
   rate?: number; // Speed: 0.1 to 2.0 (default 1.0)
@@ -11,11 +16,13 @@ export function useSpeech() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(
+    null,
+  );
 
   useEffect(() => {
     // Check if Speech Synthesis is supported
-    if ('speechSynthesis' in window) {
+    if ("speechSynthesis" in window) {
       setIsSupported(true);
     }
 
@@ -27,39 +34,42 @@ export function useSpeech() {
     };
   }, []);
 
-  const speak = useCallback((text: string, options: SpeechOptions = {}) => {
-    if (!isSupported || !text) return;
+  const speak = useCallback(
+    (text: string, options: SpeechOptions = {}) => {
+      if (!isSupported || !text) return;
 
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = options.rate || 0.9; // Slightly slower for elderly users
-    utterance.pitch = options.pitch || 1.0;
-    utterance.volume = options.volume || 1.0;
-    utterance.lang = options.lang || 'en-MY';
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = options.rate || 0.9; // Slightly slower for elderly users
+      utterance.pitch = options.pitch || 1.0;
+      utterance.volume = options.volume || 1.0;
+      utterance.lang = options.lang || "en-MY";
 
-    utterance.onstart = () => {
-      setIsSpeaking(true);
-      setIsPaused(false);
-    };
+      utterance.onstart = () => {
+        console.log("onstart fired");
+        setIsSpeaking(true);
+        setIsPaused(false);
+      };
 
-    utterance.onend = () => {
-      setIsSpeaking(false);
-      setIsPaused(false);
-      utteranceRef.current = null;
-    };
+      utterance.onend = () => {
+        console.log("onend fired");
+        setIsSpeaking(false);
+        setIsPaused(false);
+      };
 
-    utterance.onerror = (event) => {
-      console.error('Speech synthesis error:', event);
-      setIsSpeaking(false);
-      setIsPaused(false);
-      utteranceRef.current = null;
-    };
+      utterance.onerror = (event) => {
+        console.log("onerror fired", event);
+        setIsSpeaking(false);
+        setIsPaused(false);
+      };
 
-    utteranceRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
-  }, [isSupported]);
+      utteranceRef.current = utterance;
+      window.speechSynthesis.speak(utterance);
+    },
+    [isSupported],
+  );
 
   const pause = useCallback(() => {
     if (isSupported && isSpeaking && !isPaused) {
@@ -91,6 +101,6 @@ export function useSpeech() {
     stop,
     isSpeaking,
     isPaused,
-    isSupported
+    isSupported,
   };
 }

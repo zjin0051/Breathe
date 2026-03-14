@@ -62,5 +62,6 @@
   {"lat":4.598064,"lon":103.434819,"uid":2624,"name":"Paka","state":"Terengganu","country":"Malaysia"},
   {"lat":4.200344,"lon":100.663358,"uid":2597,"name":"Seri Manjung","state":"Perak","country":"Malaysia"},
   {"lat":1.389489,"lon":104.149586,"uid":9495,"name":"Pengerang","state":"Johor","country":"Malaysia"},
-  {"lat":5.748449,"lon":102.515632,"uid":9498,"name":"Besut","state":"Terengganu","country":"Malaysia"}
+  {"lat":5.748449,"lon":102.515632,"uid":9498,"name":"Besut","state":"Terengganu","country":"Malaysia"},
+  {"lat":3.212439,"lon":101.682228,"uid":2625,"name":"Batu Muda","state":"Kuala Lumpur","country":"Malaysia"}
 ]

@@ -9,7 +9,7 @@ import {
   HelpCircle,
   TestTube,
 } from "lucide-react";
-import logoImage from "figma:asset/4c954efb773717664ce372521ab63b1533e1b4c5.png";
+import logoImage from "../../assets/logo.png";
 
 export default function Home() {
   const [apiData, setApiData] = useState<any>(null);
@@ -82,8 +82,7 @@ export default function Home() {
                   Check Air Quality Now
                 </h2>
                 <p className="text-2xl text-gray-600 leading-relaxed">
-                  See current air quality in your area and get
-                  health advice
+                  See current air quality in your area and get health advice
                 </p>
               </div>
             </div>
@@ -152,8 +151,7 @@ export default function Home() {
                   Find Safe Areas
                 </h2>
                 <p className="text-2xl text-gray-600 leading-relaxed">
-                  Discover nearby locations with better air
-                  quality
+                  Discover nearby locations with better air quality
                 </p>
               </div>
             </div>
@@ -194,8 +192,8 @@ export default function Home() {
               Test Air Quality API
             </h3>
             <p className="text-2xl text-gray-600 mb-6">
-              Click the button below to test the API connection
-              and see real-time air quality data
+              Click the button below to test the API connection and see
+              real-time air quality data
             </p>
 
             <button
@@ -218,9 +216,7 @@ export default function Home() {
 
             {error && (
               <div className="mt-6 p-6 bg-red-50 border-2 border-red-300 rounded-xl">
-                <p className="text-2xl text-red-700 font-semibold">
-                  {error}
-                </p>
+                <p className="text-2xl text-red-700 font-semibold">{error}</p>
               </div>
             )}
 
@@ -253,12 +249,10 @@ export default function Home() {
         {/* Footer Info */}
         <footer className="bg-white rounded-xl p-8 border-2 border-gray-200 text-center">
           <p className="text-2xl text-gray-700 mb-4">
-            We provide easy-to-understand air quality
-            information
+            We provide easy-to-understand air quality information
           </p>
           <p className="text-xl text-gray-500">
-            Updated every hour • Data for major cities in
-            Malaysia
+            Updated every hour • Data for major cities in Malaysia
           </p>
         </footer>
       </div>

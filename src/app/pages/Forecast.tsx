@@ -13,8 +13,21 @@ import {
 import malaysiaCities from "../../imports/malaysia-cities-1.json";
 import { SpeechButton } from "../components/SpeechButton";
 
+const testStations = [
+  {
+    lat: 0,
+    lon: 0,
+    uid: 999,
+    name: "Test Station",
+    state: "Test Station",
+    country: "Malaysia",
+  },
+];
+
+const allStations = [...testStations, ...malaysiaCities];
+
 // Group stations by state and sort
-const groupedStations = malaysiaCities.reduce(
+const groupedStations = allStations.reduce(
   (acc, station) => {
     if (!acc[station.state]) {
       acc[station.state] = [];
@@ -159,6 +172,16 @@ export default function Forecast() {
   ) => {
     const selectedLocationName = e.target.value;
     setCurrentLocation(selectedLocationName);
+
+    if (selectedLocationName === "Test Station") {
+      setTomorrowData({
+        aqi: "NaN",
+        level: "",
+        pollutant: "Not available",
+        available: false,
+      });
+      return;
+    }
 
     // Find the selected station from malaysiaCities array
     const selectedStation = malaysiaCities.find(

@@ -114,7 +114,7 @@ export default function CompareLocations() {
     pollutant: "0000",
     temp: "0000",
     humidity: "0000",
-    cityName: "0000",
+    cityName: "Select a city",
   });
   const [location2Data, setLocation2Data] = useState<{
     aqi: number | string;
@@ -129,7 +129,7 @@ export default function CompareLocations() {
     pollutant: "0000",
     temp: "0000",
     humidity: "0000",
-    cityName: "0000",
+    cityName: "Select a city",
   });
 
   // Helper function to determine AQI level based on value
@@ -635,6 +635,7 @@ export default function CompareLocations() {
               style={{ maxHeight: "400px" }}
               onChange={handleLocation2Change}
             >
+              <option value="Select a city">Select a city</option>
               {sortedStates.map((state) => (
                 <optgroup
                   key={state}

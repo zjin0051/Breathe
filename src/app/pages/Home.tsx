@@ -184,57 +184,6 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* API Testing Section */}
-        {/* <div className="mb-12">
-          <div className="bg-white rounded-2xl p-8 border-4 border-indigo-200 shadow-lg">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4 flex items-center gap-3">
-              <TestTube className="w-10 h-10 text-indigo-600" />
-              Test Air Quality API
-            </h3>
-            <p className="text-2xl text-gray-600 mb-6">
-              Click the button below to test the API connection and see
-              real-time air quality data
-            </p> */}
-
-        {/* <button
-              onClick={testAPI}
-              disabled={loading}
-              className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-300 text-white text-2xl font-semibold px-8 py-4 rounded-xl transition-colors flex items-center gap-3"
-            >
-              {loading ? (
-                <>
-                  <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Loading...
-                </>
-              ) : (
-                <>
-                  <TestTube className="w-6 h-6" />
-                  Test API Connection
-                </>
-              )}
-            </button> */}
-
-        {/* {error && (
-              <div className="mt-6 p-6 bg-red-50 border-2 border-red-300 rounded-xl">
-                <p className="text-2xl text-red-700 font-semibold">{error}</p>
-              </div>
-            )}
-
-            {apiData && (
-              <div className="mt-6 p-6 bg-gray-50 border-2 border-gray-300 rounded-xl">
-                <h4 className="text-2xl font-bold text-gray-900 mb-4">
-                  API Response:
-                </h4>
-                <div className="bg-white p-4 rounded-lg border border-gray-200 overflow-auto max-h-96">
-                  <pre className="text-lg text-gray-800 whitespace-pre-wrap">
-                    {JSON.stringify(apiData, null, 2)}
-                  </pre>
-                </div>
-              </div>
-            )}
-          </div>
-        </div> */}
-
         {/* Help Link */}
         <div className="text-center mb-12">
           <Link

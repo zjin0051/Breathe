@@ -6,35 +6,32 @@ import {
   AlertTriangle,
   MapPin,
   Clock,
-  Navigation,
-  TrendingUp,
   Home as HomeIcon,
   Info,
   Bell,
   Shield,
   ThermometerSun,
   Calendar,
-  CloudRain,
-  Sun,
-  CheckCircle,
-  XCircle,
   ArrowLeft,
 } from "lucide-react";
-import {
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Area,
-  AreaChart,
-} from "recharts";
 import malaysiaCities from "../../imports/malaysia-cities-1.json";
 import { SpeechButton } from "../components/SpeechButton";
-import { SpeechSection } from "../components/SpeechSection";
+
+const testStations = [
+  {
+    lat: 0,
+    lon: 0,
+    uid: 999,
+    name: "Test Alert Station",
+    state: "Test Alert",
+    country: "Malaysia",
+  },
+];
+
+const allStations = [...testStations, ...malaysiaCities];
 
 // Group stations by state and sort
-const groupedStations = malaysiaCities.reduce(
+const groupedStations = allStations.reduce(
   (acc, station) => {
     if (!acc[station.state]) {
       acc[station.state] = [];
@@ -135,153 +132,9 @@ const airQualityData: {
   },
 };
 
-// Tomorrow's forecast data for Malaysian cities
-const tomorrowForecastData: {
-  [key: string]: {
-    aqi: number;
-    level: string;
-    pollutant: string;
-    available: boolean;
-  };
-} = {
-  "Kuala Lumpur": {
-    aqi: 62,
-    level: "Moderate",
-    pollutant: "PM2.5",
-    available: true,
-  },
-  Penang: {
-    aqi: 38,
-    level: "Low",
-    pollutant: "PM10",
-    available: true,
-  },
-  "Johor Bahru": {
-    aqi: 78,
-    level: "Moderate",
-    pollutant: "PM2.5",
-    available: true,
-  },
-  Ipoh: {
-    aqi: 35,
-    level: "Low",
-    pollutant: "PM10",
-    available: true,
-  },
-  Kuching: {
-    aqi: 110,
-    level: "High",
-    pollutant: "PM2.5",
-    available: true,
-  },
-  "Kota Kinabalu": {
-    aqi: 32,
-    level: "Low",
-    pollutant: "O3",
-    available: true,
-  },
-  Melaka: {
-    aqi: 0,
-    level: "",
-    pollutant: "",
-    available: false,
-  }, // No forecast available
-  "Shah Alam": {
-    aqi: 42,
-    level: "Low",
-    pollutant: "PM2.5",
-    available: true,
-  },
-  "Petaling Jaya": {
-    aqi: 48,
-    level: "Low",
-    pollutant: "PM2.5",
-    available: true,
-  },
-  Klang: {
-    aqi: 45,
-    level: "Low",
-    pollutant: "PM2.5",
-    available: true,
-  },
-};
-
-// Seasonal trends data
-const seasonalTrends = [
-  { month: "Jan", aqi: 58, season: "Northeast Monsoon" },
-  { month: "Feb", aqi: 62, season: "Northeast Monsoon" },
-  { month: "Mar", aqi: 71, season: "Inter-monsoon" },
-  { month: "Apr", aqi: 78, season: "Inter-monsoon" },
-  { month: "May", aqi: 68, season: "Southwest Monsoon" },
-  { month: "Jun", aqi: 82, season: "Southwest Monsoon" },
-  { month: "Jul", aqi: 105, season: "Haze Season" },
-  { month: "Aug", aqi: 118, season: "Haze Season" },
-  { month: "Sep", aqi: 98, season: "Haze Season" },
-  { month: "Oct", aqi: 75, season: "Inter-monsoon" },
-  { month: "Nov", aqi: 63, season: "Northeast Monsoon" },
-  { month: "Dec", aqi: 55, season: "Northeast Monsoon" },
-];
-
-// Seasonal health advice
-const seasonalAdvice: {
-  [key: string]: {
-    title: string;
-    advice: string;
-    precautions: string[];
-  };
-} = {
-  "Haze Season": {
-    title: "Haze Season Alert (Jul-Sep)",
-    advice:
-      "Air quality is typically unhealthy during this period due to transboundary haze. Stay indoors and use air purifiers.",
-    precautions: [
-      "Keep N95 masks ready at home",
-      "Close all windows during hazy days",
-      "Use air purifiers indoors",
-      "Avoid outdoor exercise",
-      "Drink plenty of water",
-    ],
-  },
-  "Northeast Monsoon": {
-    title: "Rainy Season (Nov-Feb)",
-    advice:
-      "Generally better air quality due to rain. Good time for outdoor activities.",
-    precautions: [
-      "Air is cleaner after rain",
-      "Good time for morning walks",
-      "Still monitor daily forecasts",
-    ],
-  },
-  "Southwest Monsoon": {
-    title: "Dry Season (May-Jun)",
-    advice:
-      "Air quality may vary. Monitor daily forecasts before outdoor activities.",
-    precautions: [
-      "Check air quality daily",
-      "Plan activities for early morning",
-      "Stay hydrated",
-    ],
-  },
-  "Inter-monsoon": {
-    title: "Transition Period (Mar-Apr, Oct)",
-    advice: "Moderate air quality expected. Weather can be unpredictable.",
-    precautions: [
-      "Check daily forecasts",
-      "Plan outdoor activities for mornings",
-      "Keep mask ready as precaution",
-    ],
-  },
-};
-
 export default function Dashboard() {
   const [currentLocation, setCurrentLocation] = useState("Kuala Lumpur");
   const [showAlert, setShowAlert] = useState(true);
-  const [comparisonCities, setComparisonCities] = useState<string[]>([
-    "Kuala Lumpur",
-    "Penang",
-    "Kuching",
-  ]);
-  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const [apiStatus, setApiStatus] = useState<"loading" | "success" | "error">(
     "loading",
   );
@@ -335,68 +188,26 @@ export default function Dashboard() {
     return mainPollutant;
   };
 
-  // Fetch air quality data from API
-  const fetchAirQualityData = async (locationName: string) => {
-    setApiStatus("loading");
-
-    // Find the selected station from malaysiaCities array
-    const selectedStation = malaysiaCities.find(
-      (station) => station.name === locationName,
-    );
-
-    if (!selectedStation) {
-      setApiStatus("error");
-      return;
-    }
-
-    const { lat, lon, name } = selectedStation;
-
-    try {
-      // Call WAQI API with latitude and longitude
-      const apiUrl = `https://api.waqi.info/feed/geo:${lat};${lon}/?token=0432e9941dd9474b614b0a70d5f5b285374c822a`;
-      const response = await fetch(apiUrl);
-      const data = await response.json();
-
-      console.log("API call successful");
-      console.log("Full API Response:", data);
-
-      if (data.status === "ok" && data.data) {
-        const apiAqi = data.data.aqi !== undefined ? data.data.aqi : "0000";
-        const apiCity = data.data.city?.name || "0000";
-        const apiTime = data.data.time?.iso || "0000";
-        const mainPollutant = getMainPollutant(data.data);
-
-        console.log("AQI:", apiAqi);
-        console.log("City:", apiCity);
-        console.log("Last Updated:", apiTime);
-        console.log("Main Pollutant:", mainPollutant);
-
-        // Update state with API data
-        setCurrentData({
-          aqi: apiAqi,
-          level: typeof apiAqi === "number" ? getAQILevel(apiAqi) : "",
-          pollutant: mainPollutant,
-          cityName: apiCity,
-          lastUpdated: apiTime,
-        });
-
-        setApiStatus("success");
-      } else {
-        console.log("API returned non-ok status:", data.status);
-        setApiStatus("error");
-      }
-    } catch (error) {
-      console.error("Failed to fetch air quality data", error);
-      setApiStatus("error");
-    }
-  };
-
   // Handle location change and call WAQI API
   const handleLocationChange = async (
     e: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const selectedLocationName = e.target.value;
     setCurrentLocation(selectedLocationName);
+
+    if (selectedLocationName === "Test Alert Station") {
+      setCurrentLocation(selectedLocationName);
+      setApiStatus("success");
+      setShowAlert(true);
+      setCurrentData({
+        aqi: 165,
+        level: "High",
+        pollutant: "PM2.5",
+        cityName: "Test Alert Station",
+        lastUpdated: new Date().toISOString(),
+      });
+      return;
+    }
 
     // Find the selected station from malaysiaCities array
     const selectedStation = malaysiaCities.find(
@@ -409,7 +220,6 @@ export default function Dashboard() {
     }
 
     const { lat, lon, name } = selectedStation;
-
     setApiStatus("loading");
 
     try {
@@ -428,12 +238,6 @@ export default function Dashboard() {
         const apiTime = data.data.time?.iso || "0000";
         const apiUid = data.data.idx; // Station UID from API
         const mainPollutant = getMainPollutant(data.data);
-
-        console.log("AQI:", apiAqi);
-        console.log("City:", apiCity);
-        console.log("UID:", apiUid);
-        console.log("Last Updated:", apiTime);
-        console.log("Main Pollutant:", mainPollutant);
 
         // Find the matching station by uid
         const matchingStation = malaysiaCities.find(
@@ -534,39 +338,6 @@ export default function Dashboard() {
 
   const cities = Object.keys(airQualityData);
 
-  // Calculate distance (simplified)
-  const calculateDistance = (city: string): number => {
-    const current = airQualityData[currentLocation];
-    const target = airQualityData[city];
-
-    // Check if both locations exist in airQualityData
-    if (!current || !target) {
-      return 0;
-    }
-
-    const latDiff = Math.abs(current.lat - target.lat);
-    const lngDiff = Math.abs(current.lng - target.lng);
-    return Math.round(Math.sqrt(latDiff * latDiff + lngDiff * lngDiff) * 111); // rough km conversion
-  };
-
-  // Get safe zones (areas with better air quality than current location)
-  const safeZones = cities
-    .filter((city) => {
-      // Only include cities that exist in airQualityData and have better AQI
-      if (city === currentLocation) return false;
-      if (!airQualityData[city]) return false;
-      if (typeof currentData.aqi !== "number") return false;
-      return airQualityData[city].aqi < currentData.aqi;
-    })
-    .map((city) => ({
-      name: city,
-      distance: calculateDistance(city),
-      aqi: airQualityData[city].aqi,
-      level: airQualityData[city].level,
-      pollutant: airQualityData[city].pollutant,
-    }))
-    .sort((a, b) => a.aqi - b.aqi);
-
   // Get color for AQI level
   const getColorForLevel = (level: string): string => {
     switch (level) {
@@ -592,20 +363,6 @@ export default function Dashboard() {
         return "bg-red-50 border-red-400";
       default:
         return "bg-gray-50 border-gray-400";
-    }
-  };
-
-  // Get text color for level
-  const getTextColorForLevel = (level: string): string => {
-    switch (level) {
-      case "Low":
-        return "text-green-900";
-      case "Moderate":
-        return "text-yellow-900";
-      case "High":
-        return "text-red-900";
-      default:
-        return "text-gray-900";
     }
   };
 
@@ -666,28 +423,6 @@ export default function Dashboard() {
   };
 
   const healthRec = getHealthRecommendation(currentData.level);
-  const selectedMonthData = selectedMonth
-    ? seasonalTrends.find((t) => t.month === selectedMonth)
-    : null;
-  const selectedAdvice = selectedMonthData
-    ? seasonalAdvice[selectedMonthData.season]
-    : null;
-
-  // Get tomorrow's forecast data
-  const tomorrowData = tomorrowForecastData[currentLocation];
-  const tomorrowHealthRec = tomorrowData?.available
-    ? getHealthRecommendation(tomorrowData.level)
-    : null;
-
-  // Get tomorrow's date
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowDateString = tomorrow.toLocaleDateString("en-MY", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
 
   // Helper function to create readable text for speech
   const getCurrentAQISpeechText = (): string => {
